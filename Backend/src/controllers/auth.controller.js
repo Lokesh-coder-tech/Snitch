@@ -7,6 +7,8 @@ async function tokenResponse(user, res, message) {
     expiresIn: "1h",
   });
 
+  res.cookie("token", token)
+
   res.status(200).json({ 
     message, 
     token ,
