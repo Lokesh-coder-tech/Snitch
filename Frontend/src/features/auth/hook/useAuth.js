@@ -5,25 +5,19 @@ import { useDispatch } from "react-redux";
 export const useAuth = () => {
   const dispatch = useDispatch();
 
-  async function handleRegister({
-    email,
-    fullname,
-    password,
-    contact,
-    isSeller = false,
-  }) {
-    const data = await register({
-      email,
-      fullname,
-      password,
-      contact,
-      isSeller,
-    });
-    dispatch(setUser(data.user));
-  }
-  async function handleLogin({ email, password }) {
+async function handleRegister({ email, contact, password, fullname, isSeller = false }) {
+
+       const data = await register({ email, contact, password, fullname, isSeller })
+
+       dispatch(setUser(data.user))
+
+       return data.user
+}
+
+async function handleLogin({ email, password }) {
     const data = await login({ email, password });
     dispatch(setUser(data.user));
-  }
+}
+
   return { handleRegister, handleLogin };
 };

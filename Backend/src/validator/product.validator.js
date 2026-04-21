@@ -15,5 +15,6 @@ export const createProductValidator = [
     body("description").notEmpty().withMessage("Description is required"),
     body("priceAmount").isNumeric().withMessage("Price amount must be a number"),
     body("priceCurrency").notEmpty().withMessage("Price currency is required"),
+    
     validateRequest
 ]

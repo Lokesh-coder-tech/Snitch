@@ -1,6 +1,9 @@
 import {createBrowserRouter} from 'react-router';
 import Register from '../features/auth/pages/Register';
 import Login from '../features/auth/pages/Login';
+import CreateProduct from '../features/product/pages/CreateProduct';
+import { Children } from 'react';
+import Dashboard from '../features/product/pages/Dashboard';
 
 export const routes = createBrowserRouter([
     {
@@ -14,5 +17,15 @@ export const routes = createBrowserRouter([
     {
         path: '/login',
         element: <Login/>
+    },
+    {
+       
+            path: 'seller/create-product',
+            element: <CreateProduct/>
+     },
+    {
+            path: 'seller/dashboard',
+            element: <Dashboard/>
+        
     }
 ])

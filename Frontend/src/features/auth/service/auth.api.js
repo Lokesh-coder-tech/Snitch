@@ -1,13 +1,13 @@
 import axios from "axios";
 
-const apiInstace = axios.create({
+const apiInstance = axios.create({
     baseURL: "http://localhost:3000",
     withCredentials: true,
 })
 
 export async function register({email, fullname, password, contact, isSeller}) {
 
-    const response = await apiInstace.post("/api/auth/register", {
+    const response = await apiInstance.post("/api/auth/register", {
         email,
         fullname,
         password,
@@ -18,7 +18,7 @@ export async function register({email, fullname, password, contact, isSeller}) {
 }
 
 export async function login({email, password}) {
-    const response = await apiInstace.post("/api/auth/login", {
+    const response = await apiInstance.post("/api/auth/login", {
         email,
         password
     })
