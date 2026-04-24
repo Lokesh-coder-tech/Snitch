@@ -4,11 +4,13 @@ import Login from '../features/auth/pages/Login';
 import CreateProduct from '../features/product/pages/CreateProduct';
 import { Children } from 'react';
 import Dashboard from '../features/product/pages/Dashboard';
+import Protected from '../features/auth/components/Protected';
+import Home from '../features/product/pages/Home';
 
 export const routes = createBrowserRouter([
     {
      path: '/',
-     element: <h1>Jai Hind Dosto</h1>
+     element: <Home/>
     },
     {
         path: '/register',
@@ -19,13 +21,28 @@ export const routes = createBrowserRouter([
         element: <Login/>
     },
     {
-       
-            path: 'seller/create-product',
-            element: <CreateProduct/>
-     },
-    {
-            path: 'seller/dashboard',
-            element: <Dashboard/>
+     path: "/seller",
+        children: [
+            {
+                path: "/seller/create-product",
+
+                element: <Protected role="seller" >
+                    <CreateProduct />
+                </Protected>
+            },
+            {
+                path: "/seller/dashboard",
+                element: <Protected role="seller" >
+                    <Dashboard />
+                </Protected>
+            },
+            // {
+            //     path: "/seller/product/:productId",
+            //     element: <Protected role="seller" >
+            //         <SellerProductDetails />
+            //     </Protected>
+            // }
+        ]
         
     }
 ])

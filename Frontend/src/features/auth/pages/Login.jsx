@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from "../hook/useAuth";
-import { Link, useNavigate } from 'react-router'; // Ensure correct import for your setup
+import { Link, useNavigate } from 'react-router'; // Using react-router-dom
 
 const Login = () => {
     const { handleLogin } = useAuth();
@@ -22,122 +22,107 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await handleLogin({
-                email: formData.email,
-                password: formData.password
-            });
-            navigate("/");
+            const user = await handleLogin({ email: formData.email, password: formData.password });
+            if (user.role === "buyer") {
+                navigate("/");
+            } else if (user.role === "seller") {
+                navigate("/seller/dashboard");
+            }
         } catch (error) {
             console.error("Login failed", error);
         }
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#faf9f6] via-[#f2f0ea] to-[#e8e4d9] text-neutral-900 font-sans selection:bg-orange-100 selection:text-orange-900 flex items-center justify-center relative overflow-hidden p-4">
-            
-            {/* Soft Warm Ambient Glows */}
-            <div className="absolute top-[-10%] left-[-5%] w-125 h-125 bg-orange-200/20 rounded-full blur-[120px] pointer-events-none"></div>
-            <div className="absolute bottom-[10%] right-[-5%] w-100 h-100 bg-yellow-200/10 rounded-full blur-[100px] pointer-events-none"></div>
-
-            {/* --- Main Container --- */}
-            <div className="container mx-auto max-w-5xl z-10 flex flex-col lg:flex-row-reverse items-center gap-6 lg:gap-12">
+        <div className="min-h-screen bg-white text-[#2D3436] font-sans flex items-center justify-center overflow-hidden">
+            <div className="flex w-full h-screen">
                 
-                {/* RIGHT SIDE (Editorial Card) */}
-                <div className="relative group w-full lg:w-5/12 max-w-sm">
-                    <div className="relative h-[540px] bg-white rounded-[32px] overflow-hidden border border-white/50 shadow-xl shadow-neutral-200/50">
-                        <img 
-                            src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop" 
-                            alt="Fashion Model Editorial" 
-                            className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-[3s]" 
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-white/10 to-transparent"></div>
-                        
-                        <div className="relative h-full flex flex-col justify-end p-8">
-                            <span className="text-neutral-900 font-black text-xl tracking-widest uppercase mb-4">Snitch.</span>
-                            <h2 className="text-5xl font-black leading-[0.9] tracking-tighter mb-4 uppercase italic text-neutral-900">
-                                WELCOME <br /> 
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-neutral-800 to-neutral-500">BACK.</span>
-                            </h2>
-                            <p className="text-neutral-600 text-[13px] leading-relaxed max-w-xs font-medium">
-                                Access your vault, track your orders, and explore exclusive member-only drops.
+                {/* LEFT SIDE: Clean, Editorial Form */}
+                <div className="w-full lg:w-1/2 flex flex-col justify-center px-8 md:px-24 lg:px-32 bg-white">
+                    <div className="max-w-md w-full mx-auto">
+                        <header className="mb-12">
+                            <div className="flex items-center gap-4 mb-2">
+                                <div className="h-px w-12 bg-black"></div>
+                                <span className="text-[10px] tracking-[0.3em] uppercase font-semibold text-neutral-500">
+                                    Our Community
+                                </span>
+                            </div>
+                            <h1 className="text-5xl md:text-6xl font-serif text-[#1a1a1a] mb-6">
+                                Welcome Back
+                            </h1>
+                            <p className="text-neutral-500 font-light leading-relaxed">
+                                Sign in to access your curated collections and latest arrivals.
                             </p>
-                        </div>
-                    </div>
-                </div>
-
-                {/* LEFT SIDE (Login Form) */}
-                <div className="w-full lg:w-7/12 max-w-xl">
-                    <div className="bg-white/70 backdrop-blur-xl border border-white/80 p-8 lg:p-10 rounded-[32px] shadow-[0_15px_40px_rgba(0,0,0,0.04)]">
-                        
-                        <header className="mb-8">
-                            <h1 className="text-3xl lg:text-4xl font-bold tracking-tight mb-1 text-neutral-900">Enter the Vault</h1>
-                            <p className="text-neutral-500 text-sm font-medium">Secure access to your fashion profile.</p>
                         </header>
 
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            
-                            {/* Email */}
-                            <div className="space-y-1.5">
-                                <label className="text-[9px] uppercase tracking-[0.2em] font-bold text-neutral-400 ml-1">Email Address</label>
+                        <form onSubmit={handleSubmit} className="space-y-8">
+                            <div className="relative group">
                                 <input
                                     type="email"
                                     name="email"
                                     value={formData.email}
                                     onChange={handleChange}
                                     required
-                                    className="w-full bg-white/50 border border-neutral-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-100 focus:border-pink-200 transition-all placeholder:text-neutral-300 shadow-sm"
-                                    placeholder="name@exclusive.com"
+                                    className="peer w-full bg-transparent border-b border-neutral-300 py-3 focus:outline-none focus:border-black transition-colors placeholder-transparent"
+                                    placeholder="Email"
                                 />
+                                <label className="absolute left-0 -top-3.5 text-neutral-500 text-xs transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-black peer-focus:text-xs">
+                                    Email Address
+                                </label>
                             </div>
 
-                            {/* Password */}
-                            <div className="space-y-1.5">
-                                <div className="flex justify-between items-center px-1">
-                                    <label className="text-[9px] uppercase tracking-[0.2em] font-bold text-neutral-400">Password</label>
-                                    <Link to="#" className="text-[9px] uppercase tracking-widest font-bold text-[#AA004F] hover:text-[#88003f] transition-colors">Forgot Password?</Link>
-                                </div>
-                                <div className="relative">
-                                    <input
-                                        type="password"
-                                        name="password"
-                                        value={formData.password}
-                                        onChange={handleChange}
-                                        required
-                                        className="w-full bg-white/50 border border-neutral-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-100 focus:border-pink-200 transition-all placeholder:text-neutral-300 shadow-sm"
-                                        placeholder="••••••••"
-                                    />
-                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-300">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                                    </div>
+                            <div className="relative group">
+                                <input
+                                    type="password"
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    required
+                                    className="peer w-full bg-transparent border-b border-neutral-300 py-3 focus:outline-none focus:border-black transition-colors placeholder-transparent"
+                                    placeholder="Password"
+                                />
+                                <label className="absolute left-0 -top-3.5 text-neutral-500 text-xs transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-black peer-focus:text-xs">
+                                    Password
+                                </label>
+                                <div className="mt-2 text-right">
+                                    <Link to="#" className="text-[10px] uppercase tracking-widest font-bold text-neutral-400 hover:text-black transition-colors">
+                                        Forgot?
+                                    </Link>
                                 </div>
                             </div>
 
-                            {/* Submit Button - Updated to #AA004F */}
-                            <div className="pt-4 relative">
+                            <div className="pt-4 flex flex-col gap-6">
                                 <button
                                     type="submit"
-                                    style={{ backgroundColor: '#AA004F' }}
-                                    className="w-full hover:brightness-110 text-white font-bold uppercase tracking-[0.15em] py-4 rounded-xl transition-all active:scale-[0.98] shadow-lg shadow-pink-900/20 text-sm"
+                                    className="w-full bg-black text-white text-xs font-bold uppercase tracking-[0.2em] py-5 hover:bg-neutral-800 transition-all active:scale-[0.99]"
                                 >
                                     Sign In
                                 </button>
                                 
-                                {/* Keyhole Detail Overlay - Color matched to Magenta */}
-                                <div className="absolute left-1/2 -bottom-4 -translate-x-1/2 w-8 h-8 bg-white border border-neutral-100 rounded-full flex items-center justify-center shadow-md">
-                                    <div className="w-1 h-3 bg-[#AA004F] rounded-full"></div>
-                                </div>
-                            </div>
-
-                            <footer className="pt-6 text-center">
-                                <p className="text-xs text-neutral-400 font-medium">
-                                    Don't have an account? 
-                                    <Link to="/register" className="ml-1.5 text-neutral-900 font-bold hover:text-[#AA004F] transition-colors border-b border-neutral-200 hover:border-[#AA004F] pb-0.5">
-                                        Sign Up
+                                <p className="text-center text-xs text-neutral-500">
+                                    New to the collection? 
+                                    <Link to="/register" className="ml-2 font-bold text-black border-b border-black pb-0.5 hover:text-neutral-600 hover:border-neutral-600 transition-colors">
+                                        JOIN NOW
                                     </Link>
                                 </p>
-                            </footer>
-
+                            </div>
                         </form>
+                    </div>
+                </div>
+
+                {/* RIGHT SIDE: Visual/Editorial Image */}
+                <div className="hidden lg:block lg:w-1/2 relative overflow-hidden bg-[#f4f4f4]">
+                    <img 
+                        src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1920&auto=format&fit=crop" 
+                        alt="Fashion Minimal" 
+                        className="absolute inset-0 w-full object-cover"
+                    />
+                    {/* Overlay to mimic the "Latest Arrivals" split-screen feel */}
+                    <div className="absolute inset-0 bg-black/5"></div>
+                    
+                    <div className="absolute bottom-12 left-12 right-12 border border-white/30 backdrop-blur-md p-8 text-white">
+                        <p className="text-[10px] tracking-[0.4em] uppercase mb-2">Editor's Pick</p>
+                        <h3 className="text-2xl font-serif">"Style is a way to say who you are without having to speak."</h3>
                     </div>
                 </div>
             </div>

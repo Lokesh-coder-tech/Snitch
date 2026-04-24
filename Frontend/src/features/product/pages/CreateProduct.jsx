@@ -52,125 +52,124 @@ const CreateProduct = () => {
         }
     };
 
-    // Compact styles
-    const inputClass = "w-full px-4 py-2.5 rounded-xl border border-gray-100 bg-gray-50/50 outline-none text-sm focus:border-pink-200 transition-all placeholder:text-gray-300";
-    const labelClass = "text-[10px] uppercase tracking-wider font-bold text-gray-400 mb-1 block";
+    const labelStyle = "text-[9px] font-bold uppercase tracking-[0.15em] text-neutral-800 mb-2 block";
+    const inputStyle = "w-full bg-transparent border-b border-neutral-300 py-2 focus:outline-none focus:border-black transition-all text-sm placeholder:text-neutral-400 placeholder:font-light";
 
     return (
-        <div className="h-screen bg-[#f3f0eb] flex items-center justify-center p-4 font-sans overflow-hidden">
-            <div className="bg-white rounded-[32px] shadow-2xl flex max-w-4xl w-full max-h-[90vh] overflow-hidden">
+        <div className="min-h-screen bg-[#F0EDE8] flex items-center justify-center p-4 md:p-8 font-sans">
+            {/* Modal Container */}
+            <div className="bg-white rounded-[40px] shadow-2xl flex flex-col md:flex-row w-full max-w-5xl overflow-hidden relative">
                 
-                {/* LEFT SIDE - Brand Panel (Fixed Height) */}
-                <div className="hidden md:flex w-[38%] relative p-4">
-                    <div className="relative w-full h-full rounded-[24px] overflow-hidden">
+                {/* Close Button */}
+                <button 
+                    onClick={() => navigate('/seller/dashboard')}
+                    className="absolute top-6 right-8 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-neutral-100 hover:bg-neutral-200 transition-colors"
+                >
+                    <span className="text-xl font-light">×</span>
+                </button>
+
+                {/* Left Side: Hero Image */}
+                <div className="w-full md:w-[45%] p-5 md:p-8">
+                    <div className="w-full h-full min-h-75 md:min-h-125 rounded-4xl overflow-hidden">
                         <img 
-                            src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000&auto=format&fit=crop" 
+                            src="https://i.pinimg.com/736x/51/97/4f/51974f55f087b3bcf6cf99b938d17a75.jpg" 
+                            alt="Product context" 
                             className="w-full h-full object-cover"
-                            alt="Fashion"
                         />
-                        <div className="absolute inset-0 bg-black/10" />
-                        <div className="absolute bottom-6 left-6 text-white pr-4">
-                            <p className="text-[9px] font-bold tracking-[0.2em] mb-1">#FASHION EDITORIAL</p>
-                            <h2 className="text-xl font-black italic tracking-tighter leading-none mb-2">SNITCH.</h2>
-                            <h3 className="text-2xl font-black uppercase leading-tight">NEW<br />COLLECTION.</h3>
-                        </div>
                     </div>
                 </div>
 
-                {/* RIGHT SIDE - Form Panel (Compressed) */}
-                <div className="w-full md:w-[62%] p-6 lg:p-10 flex flex-col justify-center overflow-y-auto">
-                    <div className="mb-5">
-                        <h1 className="text-2xl font-bold text-gray-900 leading-none">Create Product</h1>
-                        <p className="text-gray-400 text-[13px] mt-1">Add a new masterpiece to your store.</p>
-                    </div>
+                {/* Right Side: Form */}
+                <div className="w-full md:w-[55%] p-8 md:p-12 md:pl-4 flex flex-col justify-center">
+                    <header className="mb-8">
+                        <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-neutral-500 mb-2">Inventory</p>
+                        <h1 className="text-4xl font-serif text-black leading-tight">List a New Piece</h1>
+                    </header>
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-8">
+                        {/* Title */}
                         <div>
-                            <label className={labelClass}>Product Title</label>
+                            <label className={labelStyle}>Product Title</label>
                             <input
                                 type="text"
                                 name="title"
                                 value={formData.title}
                                 onChange={handleChange}
-                                placeholder="e.g. Oversized Linen Shirt"
-                                className={inputClass}
+                                placeholder="e.g., Oversized Heavyweight Tee"
+                                className={inputStyle}
                                 required
                             />
                         </div>
 
+                        {/* Description */}
                         <div>
-                            <label className={labelClass}>Description</label>
+                            <label className={labelStyle}>Description & Details</label>
                             <textarea
                                 name="description"
                                 value={formData.description}
                                 onChange={handleChange}
                                 rows={2}
-                                placeholder="Describe the product details..."
-                                className={`${inputClass} resize-none`}
+                                placeholder="Fabric specs, fit, and aesthetic notes..."
+                                className={`${inputStyle} resize-none`}
                             />
                         </div>
 
-                        <div className="flex gap-4">
-                            <div className="flex-1">
-                                <label className={labelClass}>Amount</label>
+                        {/* Price Row */}
+                        <div className="grid grid-cols-2 gap-8">
+                            <div>
+                                <label className={labelStyle}>Amount</label>
                                 <input
                                     type="number"
                                     name="priceAmount"
                                     value={formData.priceAmount}
                                     onChange={handleChange}
                                     placeholder="0.00"
-                                    className={inputClass}
+                                    className={inputStyle}
                                     required
                                 />
                             </div>
-                            <div className="w-28">
-                                <label className={labelClass}>Currency</label>
+                            <div>
+                                <label className={labelStyle}>Currency</label>
                                 <select
                                     name="priceCurrency"
                                     value={formData.priceCurrency}
                                     onChange={handleChange}
-                                    className={inputClass}
+                                    className={inputStyle}
                                 >
                                     {CURRENCIES.map(c => <option key={c} value={c}>{c}</option>)}
                                 </select>
                             </div>
                         </div>
 
-                        {/* Ultra-compact Image Area */}
+                        {/* Gallery Section */}
                         <div>
-                            <label className={labelClass}>Images ({images.length}/{MAX_IMAGES})</label>
+                            <label className={labelStyle}>Gallery ({images.length}/{MAX_IMAGES})</label>
                             <div 
                                 onClick={() => fileInputRef.current?.click()}
-                                className="border-2 border-dashed border-gray-100 rounded-xl p-3 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors"
+                                className="w-full border border-dashed border-neutral-300 rounded-xl p-4 bg-neutral-50/50 hover:bg-neutral-50 transition-all flex flex-col items-center justify-center cursor-pointer min-h-20"
                             >
                                 {images.length === 0 ? (
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400">+</div>
-                                        <span className="text-[11px] font-bold text-gray-400 uppercase">Tap to upload</span>
-                                    </div>
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-400">+ Click to Upload</span>
                                 ) : (
-                                    <div className="flex gap-2 w-full overflow-x-auto pb-1 scrollbar-hide">
+                                    <div className="flex gap-2 flex-wrap justify-center">
                                         {images.map((img, idx) => (
-                                            <img key={idx} src={img.preview} className="w-10 h-10 rounded-md object-cover flex-shrink-0 shadow-sm" alt="" />
+                                            <img key={idx} src={img.preview} className="w-12 h-12 object-cover rounded-md shadow-sm" alt="Preview" />
                                         ))}
-                                        <div className="w-10 h-10 rounded-md border border-dashed border-gray-300 flex items-center justify-center text-gray-300 flex-shrink-0 text-lg">+</div>
+                                        <div className="w-12 h-12 flex items-center justify-center border border-dashed border-neutral-300 rounded-md text-neutral-400">+</div>
                                     </div>
                                 )}
                                 <input ref={fileInputRef} type="file" multiple className="hidden" onChange={handleFileChange} accept="image/*" />
                             </div>
                         </div>
 
+                        {/* Submit Button */}
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="w-full py-3.5 bg-[#b30052] text-white rounded-xl font-bold text-[12px] tracking-widest uppercase shadow-lg shadow-pink-100 hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-70 mt-2"
+                            className="w-full bg-black text-white py-4 rounded-xl font-bold text-[11px] uppercase tracking-[0.25em] transition-all hover:bg-neutral-800 active:scale-[0.98] disabled:opacity-50"
                         >
-                            {isSubmitting ? 'Processing...' : 'Create Product'}
+                            {isSubmitting ? 'Processing...' : 'Publish to Collection'}
                         </button>
-
-                        <p className="text-center text-[11px] text-gray-400 mt-2">
-                            <button type="button" onClick={() => navigate('/seller/dashboard')} className="text-gray-900 font-bold underline underline-offset-2">Cancel & Go Back</button>
-                        </p>
                     </form>
                 </div>
             </div>

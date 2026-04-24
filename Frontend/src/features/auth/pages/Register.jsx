@@ -24,154 +24,152 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await handleRegister({
-            email: formData.email,
-            contact: formData.contactNumber,
-            password: formData.password,
-            isSeller: formData.isSeller,
-            fullname: formData.fullName
-        });
-        navigate("/");
+        try {
+            await handleRegister({
+                email: formData.email,
+                contact: formData.contactNumber,
+                password: formData.password,
+                isSeller: formData.isSeller,
+                fullname: formData.fullName
+            });
+            navigate("/");
+        } catch (error) {
+            console.error("Registration failed", error);
+        }
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#faf9f6] via-[#f2f0ea] to-[#e8e4d9] text-neutral-900 font-sans selection:bg-pink-100 selection:text-pink-900 flex items-center justify-center relative overflow-hidden p-4">
-            
-            {/* Soft Warm Ambient Glows */}
-            <div className="absolute top-[-10%] left-[-5%] w-125 h-125 bg-orange-200/20 rounded-full blur-[120px] pointer-events-none"></div>
-            <div className="absolute bottom-[10%] right-[-5%] w-100 h-100 bg-pink-200/10 rounded-full blur-[100px] pointer-events-none"></div>
-
-            {/* --- Main Container --- */}
-            <div className="container mx-auto max-w-5xl z-10 flex flex-col lg:flex-row items-center gap-6 lg:gap-12">
+        <div className="min-h-screen bg-white text-[#1a1a1a] font-sans flex items-center justify-center overflow-hidden">
+            <div className="flex w-full h-screen">
                 
-                {/* LEFT SIDE: Editorial Card */}
-                <div className="relative group w-full lg:w-5/12 max-w-sm">
-                    <div className="relative h-[560px] bg-white rounded-[32px] overflow-hidden border border-white/50 shadow-xl shadow-neutral-200/50">
-                        <img 
-                            src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=1887&auto=format&fit=crop" 
-                            alt="Fashion Model" 
-                            className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-[3s]" 
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-white/10 to-transparent"></div>
-                        
-                        <div className="relative h-full flex flex-col justify-end p-8">
-                            <span className="text-neutral-800 font-bold text-[10px] tracking-[0.3em] uppercase mb-2">#Fashion Editorial</span>
-                            <span className="text-neutral-900 font-black text-xl tracking-widest uppercase mb-4">Snitch.</span>
-                            <h2 className="text-5xl font-black leading-[0.9] tracking-tighter mb-4 uppercase italic text-neutral-900">
-                                THE <br /> NEW <br /> 
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-neutral-800 to-neutral-500">STANDARD.</span>
-                            </h2>
-                            <p className="text-neutral-600 text-[13px] leading-relaxed max-w-xs font-medium">
-                                Access curated collections and exclusive drops.
-                            </p>
-                        </div>
+                {/* LEFT SIDE: Editorial Image (Flipped from Login for variety) */}
+                <div className="hidden lg:block lg:w-1/2 relative overflow-hidden bg-[#f4f4f4]">
+                    <img 
+                        src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop" 
+                        alt="Fashion Editorial Register" 
+                        className="absolute inset-0 w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/10"></div>
+                    
+                    <div className="absolute bottom-12 left-12 right-12 border border-white/30 backdrop-blur-md p-8 text-white">
+                        <p className="text-[10px] tracking-[0.4em] uppercase mb-2 text-white/80">Membership</p>
+                        <h3 className="text-2xl font-serif">"Fashion is the armor to survive the reality of everyday life."</h3>
                     </div>
                 </div>
 
-                {/* RIGHT SIDE: Register Form */}
-                <div className="w-full lg:w-7/12 max-w-xl">
-                    <div className="bg-white/70 backdrop-blur-xl border border-white/80 p-8 lg:p-10 rounded-[32px] shadow-[0_15px_40px_rgba(0,0,0,0.04)]">
-                        
-                        <header className="mb-6">
-                            <h1 className="text-3xl lg:text-4xl font-bold tracking-tight mb-1 text-neutral-900">Create Account</h1>
-                            <p className="text-neutral-500 text-sm font-medium">Join the elite fashion circle today.</p>
+                {/* RIGHT SIDE: Clean Form */}
+                <div className="w-full lg:w-1/2 flex flex-col justify-center px-8 md:px-20 lg:px-24 bg-white overflow-y-auto py-12">
+                    <div className="max-w-md w-full mx-auto">
+                        <header className="mb-10">
+                            <div className="flex items-center gap-4 mb-2">
+                                <div className="h-px w-12 bg-black"></div>
+                                <span className="text-[10px] tracking-[0.3em] uppercase font-semibold text-neutral-500">
+                                    Join the Circle
+                                </span>
+                            </div>
+                            <h1 className="text-5xl font-serif text-[#1a1a1a] mb-4">
+                                Create Account
+                            </h1>
+                            <p className="text-neutral-500 font-light text-sm">
+                                Become a part of the elite fashion standard.
+                            </p>
                         </header>
 
-                        <form onSubmit={handleSubmit} className="space-y-5">
-                            
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {/* Name */}
-                                <div className="space-y-1.5">
-                                    <label className="text-[9px] uppercase tracking-[0.2em] font-bold text-neutral-400 ml-1">Full Name</label>
-                                    <input
-                                        type="text"
-                                        name="fullName"
-                                        value={formData.fullName}
-                                        onChange={handleChange}
-                                        required
-                                        className="w-full bg-white/50 border border-neutral-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-pink-50 focus:border-[#AA004F]/30 transition-all placeholder:text-neutral-300"
-                                        placeholder="Johnathan Doe"
-                                    />
-                                </div>
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            {/* Full Name */}
+                            <div className="relative group">
+                                <input
+                                    type="text"
+                                    name="fullName"
+                                    value={formData.fullName}
+                                    onChange={handleChange}
+                                    required
+                                    className="peer w-full bg-transparent border-b border-neutral-200 py-3 focus:outline-none focus:border-black transition-colors placeholder-transparent"
+                                    placeholder="Full Name"
+                                />
+                                <label className="absolute left-0 -top-3.5 text-neutral-400 text-[11px] uppercase tracking-wider transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-black peer-focus:text-[11px]">
+                                    Full Name
+                                </label>
+                            </div>
 
-                                {/* Phone */}
-                                <div className="space-y-1.5">
-                                    <label className="text-[9px] uppercase tracking-[0.2em] font-bold text-neutral-400 ml-1">Phone Number</label>
-                                    <input
-                                        type="tel"
-                                        name="contactNumber"
-                                        value={formData.contactNumber}
-                                        onChange={handleChange}
-                                        required
-                                        className="w-full bg-white/50 border border-neutral-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-pink-50 focus:border-[#AA004F]/30 transition-all placeholder:text-neutral-300"
-                                        placeholder="+1 234 567"
-                                    />
-                                </div>
+                            {/* Contact Number */}
+                            <div className="relative group">
+                                <input
+                                    type="tel"
+                                    name="contactNumber"
+                                    value={formData.contactNumber}
+                                    onChange={handleChange}
+                                    required
+                                    className="peer w-full bg-transparent border-b border-neutral-200 py-3 focus:outline-none focus:border-black transition-colors placeholder-transparent"
+                                    placeholder="Contact Number"
+                                />
+                                <label className="absolute left-0 -top-3.5 text-neutral-400 text-[11px] uppercase tracking-wider transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-black peer-focus:text-[11px]">
+                                    Contact Number
+                                </label>
                             </div>
 
                             {/* Email */}
-                            <div className="space-y-1.5">
-                                <label className="text-[9px] uppercase tracking-[0.2em] font-bold text-neutral-400 ml-1">Email Address</label>
+                            <div className="relative group">
                                 <input
                                     type="email"
                                     name="email"
                                     value={formData.email}
                                     onChange={handleChange}
                                     required
-                                    className="w-full bg-white/50 border border-neutral-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-pink-50 focus:border-[#AA004F]/30 transition-all placeholder:text-neutral-300"
-                                    placeholder="name@exclusive.com"
+                                    className="peer w-full bg-transparent border-b border-neutral-200 py-3 focus:outline-none focus:border-black transition-colors placeholder-transparent"
+                                    placeholder="Email Address"
                                 />
+                                <label className="absolute left-0 -top-3.5 text-neutral-400 text-[11px] uppercase tracking-wider transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-black peer-focus:text-[11px]">
+                                    Email Address
+                                </label>
                             </div>
 
                             {/* Password */}
-                            <div className="space-y-1.5 relative">
-                                <label className="text-[9px] uppercase tracking-[0.2em] font-bold text-neutral-400 ml-1">Secure Password</label>
+                            <div className="relative group">
                                 <input
                                     type="password"
                                     name="password"
                                     value={formData.password}
                                     onChange={handleChange}
                                     required
-                                    className="w-full bg-white/50 border border-neutral-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-pink-50 focus:border-[#AA004F]/30 transition-all placeholder:text-neutral-300"
-                                    placeholder="••••••••"
+                                    className="peer w-full bg-transparent border-b border-neutral-200 py-3 focus:outline-none focus:border-black transition-colors placeholder-transparent"
+                                    placeholder="Password"
                                 />
+                                <label className="absolute left-0 -top-3.5 text-neutral-400 text-[11px] uppercase tracking-wider transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-black peer-focus:text-[11px]">
+                                    Password
+                                </label>
                             </div>
 
-                            {/* Seller Option */}
-                            <div className="flex items-center gap-3 pt-1">
+                            {/* Seller Checkbox */}
+                            <div className="flex items-center gap-3 py-2">
                                 <input
                                     type="checkbox"
                                     name="isSeller"
                                     id="isSeller"
                                     checked={formData.isSeller}
                                     onChange={handleChange}
-                                    className="peer appearance-none w-4 h-4 border border-neutral-300 rounded bg-white checked:bg-[#AA004F] checked:border-[#AA004F] transition-all cursor-pointer"
+                                    className="w-4 h-4 accent-black cursor-pointer"
                                 />
-                                <label htmlFor="isSeller" className="text-[11px] text-neutral-500 hover:text-[#AA004F] transition-colors cursor-pointer select-none font-medium">
+                                <label htmlFor="isSeller" className="text-xs text-neutral-500 uppercase tracking-widest cursor-pointer select-none">
                                     Register as Seller
                                 </label>
                             </div>
 
-                            {/* Submit Button - Updated to #AA004F */}
-                            <div className="pt-2">
+                            <div className="pt-6 flex flex-col gap-6">
                                 <button
                                     type="submit"
-                                    style={{ backgroundColor: '#AA004F' }}
-                                    className="w-full hover:brightness-110 text-white font-bold uppercase tracking-[0.15em] py-4 rounded-xl transition-all active:scale-[0.98] shadow-lg shadow-pink-900/20 text-sm"
+                                    className="w-full bg-black text-white text-xs font-bold uppercase tracking-[0.2em] py-5 hover:bg-neutral-800 transition-all active:scale-[0.99]"
                                 >
                                     Create My Account
                                 </button>
-                            </div>
-
-                            <footer className="pt-2 text-center">
-                                <p className="text-xs text-neutral-400 font-medium">
+                                
+                                <p className="text-center text-[10px] uppercase tracking-widest text-neutral-400">
                                     Already a member? 
-                                    <Link to="/login" className="ml-1.5 text-neutral-900 font-bold hover:text-[#AA004F] transition-colors border-b border-neutral-200 hover:border-[#AA004F] pb-0.5">
-                                        Sign In
+                                    <Link to="/login" className="ml-2 font-bold text-black border-b border-black pb-0.5 hover:text-neutral-500 hover:border-neutral-500 transition-colors">
+                                        SIGN IN
                                     </Link>
                                 </p>
-                            </footer>
-
+                            </div>
                         </form>
                     </div>
                 </div>
