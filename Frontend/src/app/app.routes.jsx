@@ -6,6 +6,8 @@ import { Children } from 'react';
 import Dashboard from '../features/product/pages/Dashboard';
 import Protected from '../features/auth/components/Protected';
 import Home from '../features/product/pages/Home';
+import ProductDetail from '../features/product/pages/ProductDetail';
+import SellerProductDetails from '../features/product/pages/SellerProductDetails';
 
 export const routes = createBrowserRouter([
     {
@@ -19,6 +21,10 @@ export const routes = createBrowserRouter([
     {
         path: '/login',
         element: <Login/>
+    },
+    {
+        path: '/product/:productId',
+        element: <ProductDetail/>
     },
     {
      path: "/seller",
@@ -36,12 +42,12 @@ export const routes = createBrowserRouter([
                     <Dashboard />
                 </Protected>
             },
-            // {
-            //     path: "/seller/product/:productId",
-            //     element: <Protected role="seller" >
-            //         <SellerProductDetails />
-            //     </Protected>
-            // }
+           {
+            path: "/seller/product/:productId",
+            element: <Protected role="seller">
+                <SellerProductDetails/>
+            </Protected>
+           }
         ]
         
     }

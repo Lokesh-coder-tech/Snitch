@@ -42,6 +42,7 @@ export async function getSellerProducts(req, res) {
     });
 
 }
+
 export async function getAllProducts(req, res) {
     const products = await productModel.find();
     return res.status(200).json({
@@ -49,4 +50,22 @@ export async function getAllProducts(req, res) {
         success: true,
         products
     });
+}
+
+export async function getProductDetails(req, res) {
+    const {id} = req.params;
+
+    const product = await productModel.findById(id);
+
+    if(!product){
+        return res.status(404).json({
+            message: "product is not found",
+            success: false
+        })
+    }
+    return res.status(200).json({
+        message: "product details fetched successfully",
+        success: true,
+        product
+    })
 }
