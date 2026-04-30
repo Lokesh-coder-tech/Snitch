@@ -44,7 +44,7 @@ const ProductDetail = () => {
             />
 
             <div className="min-h-screen bg-white font-['Inter'] selection:bg-[#C9A96E]/20 pb-24">
-                <div className="max-w-350 mx-auto px-6 lg:px-12 pt-8 lg:pt-12">
+                <div className="max-w-350 mx-auto px-6 lg:px-12 pt-8 lg:pt-8">
                     
                     {/* Back Navigation */}
                     <button 
