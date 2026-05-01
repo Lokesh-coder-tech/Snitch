@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate, Link } from 'react-router'; // Note: Ensure it's 'react-router-dom' in v6+
+import { useNavigate, Link } from 'react-router';
+import { useAuth } from '../../auth/hook/useAuth'; // Note: Ensure it's 'react-router-dom' in v6+
 
 const Nav = () => {
+    const { handleLogout } = useAuth();
     const navigate = useNavigate();
     const user = useSelector(state => state.auth?.user);
     const cartItems = useSelector(state => state.cart?.items);
@@ -89,6 +91,9 @@ const Nav = () => {
                                     </span>
                                 )}
                             </Link>
+                            <a href="#" onClick={handleLogout} className="text-xs font-medium uppercase tracking-widest text-gray-900 hover:text-[#C9A96E] transition-colors duration-300" >
+                                Logout
+                            </a>
                         </>
                     ) : (
                         <div className="flex items-center gap-6">
