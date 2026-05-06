@@ -9,6 +9,7 @@ import Home from "../features/product/pages/Home";
 import ProductDetail from "../features/product/pages/ProductDetail";
 import SellerProductDetails from "../features/product/pages/SellerProductDetails";
 import AppLayout from "./AppLayout";
+import Cart from "../features/cart/pages/Cart";
 
 export const routes = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ export const routes = createBrowserRouter([
         path: "/product/:productId",
         element: <ProductDetail />,
       },
+     {
+        path: "/cart",
+        element: <Cart/>
+     },
       {
         path: "/seller",
         children: [
