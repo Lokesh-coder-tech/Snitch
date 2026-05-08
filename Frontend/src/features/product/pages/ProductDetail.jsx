@@ -15,7 +15,6 @@ const ProductDetail = () => {
   async function fetchProductDetails() {
     try {
       const data = await handleGetProductById(productId);
-      // Handle both cases depending on how API is structured
       setProduct(data?.product || data);
     } catch (error) {
       console.error("Failed to fetch product details", error);
@@ -41,13 +40,9 @@ const ProductDetail = () => {
       const isMatch = vKeys.every(
         (k) => v.attributes[k] === selectedAttributes[k],
       );
-      // If they don't have exactly the same keys, they shouldn't perfectly match,
-      // but we might only care about matching what's available.
       return vKeys.length === sKeys.length && isMatch;
     });
   }, [product, selectedAttributes]);
-
-  console.log({ product, activeVariant });
 
   const availableAttributes = useMemo(() => {
     if (!product?.variants) return {};
@@ -73,7 +68,6 @@ const ProductDetail = () => {
   const handleAttributeChange = (attrName, value) => {
     const newAttrs = { ...selectedAttributes, [attrName]: value };
 
-    // Find if an exact match exists for this combination
     const exactMatch = product.variants.find((v) => {
       const vAttrs = v.attributes || {};
       return (
@@ -85,7 +79,6 @@ const ProductDetail = () => {
     if (exactMatch) {
       setSelectedAttributes(exactMatch.attributes);
     } else {
-      // Find any variant that has this newly selected attribute to fallback nicely
       const fallbackVariant = product.variants.find(
         (v) => v.attributes && v.attributes[attrName] === value,
       );
@@ -113,9 +106,6 @@ const ProductDetail = () => {
     );
   }
 
-  console.log(product);
-
-  // Fallbacks
   const displayImages =
     activeVariant?.images && activeVariant.images.length > 0
       ? activeVariant.images
@@ -129,7 +119,6 @@ const ProductDetail = () => {
 
   return (
     <>
-      {/* Google Fonts */}
       <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap"
         rel="stylesheet"
@@ -146,14 +135,13 @@ const ProductDetail = () => {
           <div className="flex flex-col lg:flex-row gap-12 lg:gap-24 items-start">
             {/* ── LEFT: Image Gallery ── */}
             <div className="w-full lg:w-[70%] flex flex-col-reverse md:flex-row gap-4 lg:gap-6">
-              {/* Thumbnails (Vertical on Desktop, Horizontal on Mobile) */}
               {displayImages.length > 1 && (
-                <div className="flex flex-row md:flex-col gap-4 overflow-x-auto md:overflow-y-auto pb-2 md:pb-0 scrollbar-hide w-full md:w-20 lg:w-24 flex-shrink-0 md:max-h-[calc(100vh-200px)]">
+                <div className="flex flex-row md:flex-col gap-4 overflow-x-auto md:overflow-y-auto pb-2 md:pb-0 scrollbar-hide w-full md:w-20 lg:w-24 shrink-0 md:max-h-[calc(100vh-200px)]">
                   {displayImages.map((img, idx) => (
                     <button
                       key={idx}
                       onClick={() => setSelectedImage(idx)}
-                      className={`flex-shrink-0 w-20 md:w-full aspect-[4/5] overflow-hidden transition-all duration-300 ${selectedImage === idx ? "opacity-100 ring-1 ring-[#C9A96E] ring-offset-2" : "opacity-50 hover:opacity-100"}`}
+                      className={`shrink-0 w-20 md:w-full aspect-4/5 overflow-hidden transition-all duration-300 ${selectedImage === idx ? "opacity-100 ring-1 ring-[#C9A96E] ring-offset-2" : "opacity-50 hover:opacity-100"}`}
                       style={{
                         backgroundColor: "#f5f3f0",
                         "--tw-ring-offset-color": "#fbf9f6",
@@ -169,7 +157,6 @@ const ProductDetail = () => {
                 </div>
               )}
 
-              {/* Main Image */}
               <div
                 className="relative w-full aspect-4/5 overflow-hidden group"
                 style={{ backgroundColor: "#f5f3f0" }}
@@ -360,12 +347,18 @@ const ProductDetail = () => {
                     e.currentTarget.style.color = "#fbf9f6";
                   }}
                   onClick={() => {
-                    handleAddItem({
-                      productId: product._id,
-                      // Use optional chaining so it passes undefined instead of crashing,
-                      // or pass null explicitly if your backend prefers it.
-                      variantId: activeVariant?._id || null,
-                    });
+                    // SEAMLESS FALLBACK LOGIC
+                    // Ensures a valid ObjectId is sent to the backend instead of the primitive `null`
+                    const validVariantId = activeVariant?._id || (product?.variants?.length > 0 ? product.variants[0]._id : "");
+                    
+                    if (validVariantId) {
+                      handleAddItem({
+                        productId: product._id,
+                        variantId: validVariantId,
+                      });
+                    } else {
+                      console.error("No valid variant ID found for this product.");
+                    }
                   }}
                 >
                   Add to Cart
@@ -392,7 +385,7 @@ const ProductDetail = () => {
 
               {/* Extra elegant details */}
               <div
-                className="mt-14 space-y-4 text-[10px] uppercase tracking-[0.1em]"
+                className="mt-14 space-y-4 text-[10px] uppercase tracking-widest"
                 style={{ color: "#B5ADA3" }}
               >
                 <div
