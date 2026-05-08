@@ -30,8 +30,8 @@ const Cart = () => {
     handleIncrementCartItem,
     handleDecrementCartItem,
     handleRemoveCartItem,
-    handleCreateCartOrder,
-    handleVerifyCartOrder,
+    // handleCreateCartOrder,
+    // handleVerifyCartOrder,
   } = useCart();
 
   const navigate = useNavigate();

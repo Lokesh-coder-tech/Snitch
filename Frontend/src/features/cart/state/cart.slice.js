@@ -27,9 +27,27 @@ const cartSlice = createSlice({
                     return item
                 }
             })
+        },
+        decrementCartItem: (state, action) => {
+            const { productId, variantId } = action.payload
+
+            state.items = state.items.map(item => {
+                if (item.product._id === productId && item.variant === variantId) {
+                    return { ...item, quantity: Math.max(1, item.quantity - 1) }
+                } else {
+                    return item
+                }
+            })
+        },
+        removeItem: (state, action) => {
+            const { productId, variantId } = action.payload
+
+            state.items = state.items.filter(item => 
+                !(item.product._id === productId && item.variant === variantId)
+            )
         }
     }
 })
 
-export const { setCart, addItem, incrementCartItem } = cartSlice.actions
+export const { setCart, addItem, incrementCartItem, decrementCartItem, removeItem } = cartSlice.actions
 export default cartSlice.reducer

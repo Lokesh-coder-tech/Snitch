@@ -22,3 +22,14 @@ export const incrementCartItemApi = async ({productId, variantId}) => {
     const response = await apiInstance.patch(`/api/cart/quantity/increment/${productId}/${variantId}`)
     return response.data;
 }
+
+export const decrementCartItemApi = async ({productId, variantId}) => {
+    const response = await apiInstance.patch(`/api/cart/quantity/decrement/${productId}/${variantId}`)
+    return response.data;
+}
+
+export const removeCartItemApi = async ({productId, variantId}) => {
+    const response = await apiInstance.delete(`/api/cart/remove/${productId}/${variantId}`)
+    return response.data;
+}
+
