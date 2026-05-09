@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useCart } from "../hooks/useCart";
 import { Link, useNavigate } from "react-router";
-// import { useRazorpay } from "react-razorpay";
+import { useRazorpay } from "react-razorpay";
 
 /* ─── Inline styles & tokens matching the "Avenue Montaigne" design system ─── */
 const tokens = {
@@ -30,12 +30,14 @@ const Cart = () => {
     handleIncrementCartItem,
     handleDecrementCartItem,
     handleRemoveCartItem,
-    // handleCreateCartOrder,
+    handleCreateCartOrder,
     // handleVerifyCartOrder,
   } = useCart();
 
   const navigate = useNavigate();
-  // const { error, isLoading, Razorpay } = useRazorpay();
+
+  const { error, isLoading, Razorpay } = useRazorpay();
+
   const user = useSelector((state) => state.user);
 
   useEffect(() => {
@@ -64,37 +66,49 @@ const Cart = () => {
   const formatCurrency = (amount, currency = "INR") =>
     `${currency} ${Number(amount).toLocaleString("en-IN")}`;
 
-  async function handleCheckout() {
-    const order = await handleCreateCartOrder();
-    console.log(order);
+ async function handleCheckout() {
+    try {
+      const order = await handleCreateCartOrder();
+      console.log("Created order:", order);
 
-    const options = {
-      key: "rzp_test_ShNSkpxt3emQVJ",
-      amount: order.amount, // Amount in paise
-      currency: order.currency,
-      name: "Snitch",
-      description: "Test Transaction",
-      order_id: order.id, // Generate order_id on server
-      handler: async (response) => {
-        const isValid = await handleVerifyCartOrder(response);
-        if (isValid) {
-          navigate(`/order-success?order_id=${response?.razorpay_order_id}`);
-        }
-      },
-      prefill: {
-        name: user?.fullname,
-        email: user?.email,
-        contact: user?.contact,
-      },
-      theme: {
-        color: tokens.primary,
-      },
-    };
+      // SAFETY CHECK: Stop execution if order is invalid or undefined
+      // if (!order || !order.amount) {
+      //   console.error("Failed to create order or missing amount details.");
+      //   // You might want to show a toast notification to the user here
+      //   return; 
+      // }
 
-    const razorpayInstance = new window.Razorpay(options); // Assumed window object if using script tag
-    razorpayInstance.open();
+      const options = {
+        key: "rzp_test_ShNSkpxt3emQVJ",
+        amount: order.amount, 
+        currency: order.currency || "INR",
+        name: "Snitch",
+        description: "Test Transaction",
+        order_id: order.id, 
+        handler: async (response) => {
+          const isValid = await handleVerifyCartOrder(response);
+          if (isValid) {
+            navigate(`/order-success?order_id=${response?.razorpay_order_id}`);
+          }
+        },
+        prefill: {
+          name: user?.fullname,
+          email: user?.email,
+          contact: user?.contact,
+        },
+        theme: {
+          color: tokens.primary,
+        },
+      };
+
+      const razorpayInstance = new window.Razorpay(options); 
+      razorpayInstance.open();
+      
+    } catch (error) {
+      console.error("Checkout error:", error);
+    }
   }
-
+ 
   /* ─── Empty state ─── */
   if (!cart?.items?.length) {
     return (
