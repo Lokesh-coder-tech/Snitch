@@ -7,7 +7,11 @@ async function tokenResponse(user, res, message) {
     expiresIn: "1h",
   });
 
-  res.cookie("token", token)
+  res.cookie("token", token, {
+  httpOnly: true,
+  secure: true,
+  sameSite: "none",
+});
 
   res.status(200).json({ 
     message, 
