@@ -46,8 +46,8 @@ app.use("/api/cart", cartRoutes);
 // Static file serving
 app.use(express.static('public'));
 
-// SPA fallback - MUST be last to catch all unmatched routes
-app.get("*", (req, res) => {
+// SPA fallback middleware - MUST be last to catch all unmatched routes
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, "../public/index.html"));
 });
 
