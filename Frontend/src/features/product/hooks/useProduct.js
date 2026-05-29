@@ -7,30 +7,57 @@ export const useProduct = () => {
     const dispatch = useDispatch();
 
      async function handleCreateProduct(formData) {
-        const data = await createProduct(formData)
-        return data.product
+        try {
+            const data = await createProduct(formData)
+            return data.product
+        } catch (error) {
+            console.error("Error creating product:", error);
+            throw error;
+        }
     }
 
     async function handleGetSellerProduct() {
-        const data = await getSellerProducts()
-        dispatch(setSellerProducts(data.products))
-        return data.products
+        try {
+            const data = await getSellerProducts()
+            dispatch(setSellerProducts(data.products))
+            return data.products
+        } catch (error) {
+            console.error("Error fetching seller products:", error);
+            throw error;
+        }
     }
 
     async function handleGetAllProducts() {
-        const data = await getAllProducts()
-        dispatch(setProducts(data.products))
-        return data.products
+        try {
+            console.log("Fetching all products...");
+            const data = await getAllProducts()
+            console.log("Products fetched successfully:", data);
+            dispatch(setProducts(data.products))
+            return data.products
+        } catch (error) {
+            console.error("Error fetching all products:", error);
+            throw error;
+        }
     }
 
     async function handleGetProductById(productId) {
-        const data = await getProductById(productId)
-        return data.product
+        try {
+            const data = await getProductById(productId)
+            return data.product
+        } catch (error) {
+            console.error("Error fetching product by ID:", error);
+            throw error;
+        }
     }
 
     async function handleAddProductVariant(productId, newProductVariant) {
-        const data = await addProductVariant(productId, newProductVariant)
-        return data.product
+        try {
+            const data = await addProductVariant(productId, newProductVariant)
+            return data.product
+        } catch (error) {
+            console.error("Error adding product variant:", error);
+            throw error;
+        }
     }
 
     return {handleCreateProduct, handleGetSellerProduct, handleGetAllProducts, handleGetProductById, handleAddProductVariant};

@@ -5,6 +5,16 @@ const apiInstance = axios.create({
     withCredentials: true,
 })
 
+// Error interceptor
+apiInstance.interceptors.response.use(
+    response => response,
+    error => {
+        const message = error.response?.data?.message || error.message || "An error occurred";
+        console.error("Cart API Error:", message, error.response?.status);
+        return Promise.reject(new Error(message));
+    }
+);
+
 export const addItem = async ({productId, variantId}) => {
     const response = await apiInstance.post(`/api/cart/add/${productId}/${variantId}`,{
         quantity: 1
