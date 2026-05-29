@@ -7,19 +7,26 @@ async function tokenResponse(user, res, message) {
     expiresIn: "1h",
   });
 
-  res.cookie("token", token)
+  // Set cookie with proper options for production
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    maxAge: 3600000, // 1 hour
+    path: '/'
+  });
 
   res.status(200).json({ 
     message, 
-    token ,
+    token,
     success: true,
-        user: {
-            id: user._id,
-            email: user.email,
-            contact: user.contact,
-            fullname: user.fullname,
-            role: user.role
-        }
+    user: {
+        id: user._id,
+        email: user.email,
+        contact: user.contact,
+        fullname: user.fullname,
+        role: user.role
+    }
 });
 
 }
@@ -98,6 +105,11 @@ export const getMe = async (req, res) => {
 }
 
 export const logout = async (req, res) => {
-  res.clearCookie("token");
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    path: '/'
+  });
   res.status(200).json({ message: "Logout successful", success: true });
 }

@@ -12,11 +12,28 @@ import cookieParser from "cookie-parser"
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// CORS configuration for both development and production
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "https://snitch-9ajg.onrender.com",
+  process.env.FRONTEND_URL // Add frontend URL from environment variable for flexibility
+];
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "DELETE", "PATCH"],
     credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
 app.use(cookieParser());

@@ -3,7 +3,8 @@ import {connectDB} from "./src/config/db.js";
 
 connectDB();
 
-app.listen(3000, () => {
-    console.log("server is listenning opn port 3000 ");
-    
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`Server is listening on port ${PORT}`);
 })

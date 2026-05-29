@@ -13,7 +13,7 @@ router.patch("/quantity/increment/:productId/:variantId", authenticateUser, vali
 
 router.patch("/quantity/decrement/:productId/:variantId", authenticateUser, decrementCartItemQuantity)
 
-router.delete("/quantity/remove/:productId/:variantId", authenticateUser, removeCartItem)
+router.delete("/remove/:productId/:variantId", authenticateUser, removeCartItem)
 
 router.post("/payment/create/order", authenticateUser, createOrderController)
 
