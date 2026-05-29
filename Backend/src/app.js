@@ -37,13 +37,18 @@ app.use(
   }),
 );
 app.use(cookieParser());
-app.use(express.static('public'));
 
-app.get("*name", (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/index.html"));
-});
-
+// API routes MUST come before static files and SPA fallback
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
+
+// Static file serving
+app.use(express.static('public'));
+
+// SPA fallback - MUST be last to catch all unmatched routes
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/index.html"));
+});
+
 export default app;
