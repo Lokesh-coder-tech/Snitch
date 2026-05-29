@@ -10,9 +10,9 @@ const cartSlice = createSlice({
     },
     reducers: {
         setCart: (state, action) => {
-            state.items = action.payload.items;
-            state.totalPrice = action.payload.totalPrice;
-            state.currency = action.payload.currency;
+           state.items = action.payload?.items || [];
+            state.totalPrice = action.payload?.totalPrice;
+            state.currency = action.payload?.currency;
         },
         addItem: (state, action) => {
             state.items.push(action.payload)

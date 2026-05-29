@@ -7,7 +7,7 @@ const Nav = () => {
   const { handleLogout } = useAuth();
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth?.user);
-  const cartItems = useSelector((state) => state.cart?.items);
+  const cartItems = useSelector((state) => state.cart?.items || []);
   const [scrolled, setScrolled] = useState(false);
 
   // Add a subtle border shadow when scrolling down
