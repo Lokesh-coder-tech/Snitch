@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useParams, Link, useNavigate } from "react-router";
 import { useProduct } from "../hooks/useProduct";
 import { useCart } from "../../cart/hooks/useCart";
+import { ToastContainer, toast } from 'react-toastify';
 
 const ProductDetail = () => {
   const { productId } = useParams();
@@ -11,6 +12,13 @@ const ProductDetail = () => {
   const navigate = useNavigate();
   const { handleGetProductById } = useProduct();
   const { handleAddItem } = useCart();
+
+   const notify = () => toast.success("Product added to cart!", {
+  style: {
+    backgroundColor: "#1e293b", /* Slate 800 */
+    color: "#f8fafc"            /* Slate 50 */
+  }
+});
 
   async function fetchProductDetails() {
     try {
@@ -347,6 +355,7 @@ const ProductDetail = () => {
                     e.currentTarget.style.color = "#fbf9f6";
                   }}
                   onClick={() => {
+                    notify();
                     // SEAMLESS FALLBACK LOGIC
                     // Ensures a valid ObjectId is sent to the backend instead of the primitive `null`
                     const validVariantId = activeVariant?._id || (product?.variants?.length > 0 ? product.variants[0]._id : "");
@@ -363,6 +372,7 @@ const ProductDetail = () => {
                 >
                   Add to Cart
                 </button>
+                 <ToastContainer />
 
                 <button
                   className="w-full py-4 text-[11px] uppercase tracking-[0.25em] font-medium transition-all duration-300 border"

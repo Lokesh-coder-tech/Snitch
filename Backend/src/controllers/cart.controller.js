@@ -243,8 +243,13 @@ export const createOrderController = async (req, res) => {
             success: false
         })
     }
+    
+    console.log("Cart Total Price:", cart.totalPrice);
+console.log("Cart Currency:", cart.currency);
 
     const order = await createOrder({ amount: cart.totalPrice, currency: cart.currency })
+
+    console.log("Razorpay Order:", order);
 
     const payment = await paymentModel.create({
         user: req.user._id,

@@ -69,7 +69,9 @@ const Cart = () => {
   
   async function handleCheckout() {
         const order = await handleCreateCartOrder()
-        console.log(order)
+        console.log("ORDER DATA =>", order);
+        console.log("ORDER AMOUNT =>", order.amount);
+        console.log("ORDER ID =>", order.id);
 
 
         const options = {
