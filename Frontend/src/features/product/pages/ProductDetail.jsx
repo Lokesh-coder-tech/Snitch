@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useParams, Link, useNavigate } from "react-router";
 import { useProduct } from "../hooks/useProduct";
 import { useCart } from "../../cart/hooks/useCart";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
 
 const ProductDetail = () => {
   const { productId } = useParams();
@@ -13,12 +13,13 @@ const ProductDetail = () => {
   const { handleGetProductById } = useProduct();
   const { handleAddItem } = useCart();
 
-   const notify = () => toast.success("Product added to cart!", {
-  style: {
-    backgroundColor: "#1e293b", /* Slate 800 */
-    color: "#f8fafc"            /* Slate 50 */
-  }
-});
+  const notify = () =>
+    toast.success("Product added to cart!", {
+      style: {
+        backgroundColor: "#1e293b" /* Slate 800 */,
+        color: "#f8fafc" /* Slate 50 */,
+      },
+    });
 
   async function fetchProductDetails() {
     try {
@@ -35,6 +36,7 @@ const ProductDetail = () => {
 
   useEffect(() => {
     if (product?.variants?.length > 0) {
+      console.log("Variants:", product.variants);
       setSelectedAttributes(product.variants[0].attributes || {});
     }
   }, [product]);
@@ -74,29 +76,23 @@ const ProductDetail = () => {
   }, [activeVariant]);
 
   const handleAttributeChange = (attrName, value) => {
-    const newAttrs = { ...selectedAttributes, [attrName]: value };
-
-    const exactMatch = product.variants.find((v) => {
-      const vAttrs = v.attributes || {};
-      return (
-        Object.keys(newAttrs).every((k) => newAttrs[k] === vAttrs[k]) &&
-        Object.keys(vAttrs).every((k) => newAttrs[k] === vAttrs[k])
-      );
-    });
-
-    if (exactMatch) {
-      setSelectedAttributes(exactMatch.attributes);
-    } else {
-      const fallbackVariant = product.variants.find(
-        (v) => v.attributes && v.attributes[attrName] === value,
-      );
-      if (fallbackVariant) {
-        setSelectedAttributes(fallbackVariant.attributes);
-      } else {
-        setSelectedAttributes(newAttrs);
-      }
-    }
+  const updatedAttributes = {
+    ...selectedAttributes,
+    [attrName]: value,
   };
+
+  const matchingVariant = product.variants.find((variant) => {
+    const attrs = variant.attributes || {};
+
+    return Object.entries(updatedAttributes).every(
+      ([key, val]) => attrs[key] === val
+    );
+  });
+
+  if (matchingVariant) {
+    setSelectedAttributes(matchingVariant.attributes);
+  }
+};
 
   if (!product) {
     return (
@@ -292,11 +288,33 @@ const ProductDetail = () => {
                   <div className="flex flex-wrap gap-2">
                     {values.map((val) => {
                       const isSelected = selectedAttributes[attrName] === val;
+
+                      const isAvailable = product?.variants?.some((variant) => {
+                        const attrs = variant.attributes || {};
+
+                        const updatedAttrs = {
+                          ...selectedAttributes,
+                          [attrName]: val,
+                        };
+
+                        return Object.entries(updatedAttrs).every(
+                          ([key, value]) => attrs[key] === value,
+                        );
+                      });
+
                       return (
                         <button
                           key={val}
                           onClick={() => handleAttributeChange(attrName, val)}
-                          className={`px-4 py-2 text-[11px] uppercase tracking-[0.15em] font-medium transition-all duration-300 border ${isSelected ? "border-[#1b1c1a] bg-[#1b1c1a] text-[#fbf9f6]" : "border-[#d0c5b5] text-[#1b1c1a] hover:border-[#1b1c1a]"}`}
+                          disabled={!isAvailable}
+                          className={`px-4 py-2 text-[11px] uppercase tracking-[0.15em] font-medium transition-all duration-300 border
+        ${
+          isSelected
+            ? "border-[#1b1c1a] bg-[#1b1c1a] text-[#fbf9f6]"
+            : "border-[#d0c5b5] text-[#1b1c1a] hover:border-[#1b1c1a]"
+        }
+        ${!isAvailable ? "opacity-40 cursor-not-allowed line-through" : ""}
+      `}
                           style={
                             isSelected ? {} : { backgroundColor: "transparent" }
                           }
@@ -356,23 +374,26 @@ const ProductDetail = () => {
                   }}
                   onClick={() => {
                     notify();
-                    // SEAMLESS FALLBACK LOGIC
-                    // Ensures a valid ObjectId is sent to the backend instead of the primitive `null`
-                    const validVariantId = activeVariant?._id || (product?.variants?.length > 0 ? product.variants[0]._id : "");
-                    
-                    if (validVariantId) {
-                      handleAddItem({
-                        productId: product._id,
-                        variantId: validVariantId,
-                      });
-                    } else {
-                      console.error("No valid variant ID found for this product.");
+
+                    const validVariantId =
+                      activeVariant?._id || product?.variants?.[0]?._id;
+
+                    if (!validVariantId) {
+                      console.error(
+                        "No valid variant ID found for this product.",
+                      );
+                      return;
                     }
+
+                    handleAddItem({
+                      productId: product._id,
+                      variantId: validVariantId,
+                    });
                   }}
                 >
                   Add to Cart
                 </button>
-                 <ToastContainer />
+                <ToastContainer />
 
                 <button
                   className="w-full py-4 text-[11px] uppercase tracking-[0.25em] font-medium transition-all duration-300 border"
