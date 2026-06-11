@@ -78,7 +78,7 @@ const Cart = () => {
             key: "rzp_test_SnKGaAGJ8teHse",
             amount: order.amount, // Amount in paise
             currency: order.currency,
-            name: "Snitch",
+            name: "Velora",
             description: "Test Transaction",
             order_id: order.id, // Generate order_id on server
             handler: async (response) => {

@@ -1,251 +1,252 @@
 import React from "react";
 import { useLocation, Link } from "react-router";
+import { useSelector } from "react-redux";
 
 const tokens = {
-  surface: "#fbf9f6",
-  surfaceLow: "#f5f3f0",
-  surfaceLowest: "#ffffff",
-  surfaceHigh: "#eae8e5",
-  surfaceHighest: "#e4e2df",
-  onSurface: "#1b1c1a",
-  onSurfaceVariant: "#4d463a",
-  secondary: "#7A6E63",
-  muted: "#B5ADA3",
-  primary: "#C9A96E",
-  primaryDark: "#745a27",
-  outlineVariant: "#d0c5b5",
-  outline: "#7f7668",
+  surface: "#FAFAFA",
+  surfaceLow: "#F4F4F4",
+  surfaceLowest: "#FFFFFF",
+  surfaceHigh: "#EAEAEA",
+  onSurface: "#111111",
+  onSurfaceVariant: "#555555",
+  secondary: "#767676",
+  muted: "#9E9E9E",
+  primary: "#C5A264", 
+  primaryDark: "#111111", 
+  outlineVariant: "#E5E5E5",
+  outline: "#222222",
 };
 
 const OrderSuccess = () => {
   const location = useLocation();
-
   const queryParams = new URLSearchParams(location.search);
-  const orderId = queryParams.get("order_id") || "SN-00000";
+  const orderId = queryParams.get("order_id") || "ToAp1pe6Bfj2WH";
+
+  // Dynamic Data Source: Pulling directly from verified cart state 
+  const cart = useSelector((state) => state.cart);
+
+  const formatCurrency = (amount, currency = "INR") =>
+    `${currency} ${Number(amount).toLocaleString("en-IN")}`;
+
+  // Helper selectors identical to Cart parsing logic
+  const getVariantDetails = (product, variantId) => {
+    if (!product?.variants || !variantId) return null;
+    if (Array.isArray(product.variants)) {
+      return product.variants.find((v) => v._id === variantId) || product.variants[0];
+    }
+    return product.variants;
+  };
+
+  const getDisplayImage = (product, variant) => {
+    if (variant?.images?.length) return variant.images[0].url;
+    if (product?.images?.length) return product.images[0].url;
+    return null;
+  };
+
+  const cartItems = cart?.items || [];
+  const totalPrice = cart?.totalPrice || 0;
 
   return (
     <>
       <link
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap"
         rel="stylesheet"
       />
       <div
-        className="min-h-screen pb-24 selection:bg-[#C9A96E]/30"
+        className="h-full p-7 flex flex-col overflow-hidden selection:bg-[#C9A96E]/30"
         style={{
           backgroundColor: tokens.surface,
-          fontFamily: "'Inter', sans-serif",
+          fontFamily: "'Plus Jakarta Sans', sans-serif",
         }}
       >
-        <main className="pt-12 lg:pt-20 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
-            {/* Left Column: Success Message & Summary */}
-            <div className="lg:col-span-7 space-y-12">
-              <section className="space-y-6">
-                <span
-                  className="uppercase tracking-[0.2em] text-[10px]"
-                  style={{ color: tokens.secondary }}
-                >
-                  TRANSACTION COMPLETE
-                </span>
-                <h1
-                  className="text-5xl md:text-7xl leading-tight font-light tracking-tight"
-                  style={{
-                    fontFamily: "'Cormorant Garamond', serif",
-                    color: tokens.onSurface,
-                  }}
-                >
-                  A piece of our <br />
-                  <i className="italic">Atelier</i> is yours.
-                </h1>
-                <div className="space-y-2 mt-6">
-                  <p
-                    className="text-sm uppercase tracking-widest"
-                    style={{ color: tokens.outline }}
+        {/* Viewport-Centered Content Section */}
+        <main className="grow flex items-center justify-center px-6 md:px-12 lg:px-20 max-w-7xl w-full mx-auto overflow-hidden py-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center w-full max-h-full overflow-hidden">
+            
+            {/* Left Column: Confirmation Header & Summary */}
+            <div className="lg:col-span-7 space-y-6 flex flex-col max-h-full overflow-hidden">
+              <section className="space-y-3 shrink-0">
+                <div className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
+                  <span
+                    className="uppercase tracking-[0.25em] text-[10px] font-semibold"
+                    style={{ color: tokens.primary }}
                   >
+                    Order Confirmed
+                  </span>
+                </div>
+                
+                <h1
+                  className="text-3xl md:text-5xl font-light tracking-tight text-neutral-900 leading-[1.2]"
+                  style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                >
+                  Thank you for your order. <br />
+                  A piece of our <span className="italic font-normal text-neutral-700">Atelier</span> is yours.
+                </h1>
+
+                <div className="pt-3 border-t border-neutral-200/60 max-w-md inline-block pr-12">
+                  <p className="text-[9px] uppercase tracking-[0.2em] text-neutral-400 font-medium mb-0.5">
                     Order Reference
                   </p>
-                  <p
-                    className="text-2xl"
-                    style={{
-                      fontFamily: "'Cormorant Garamond', serif",
-                      color: tokens.primaryDark,
-                    }}
-                  >
+                  <p className="font-mono text-xs tracking-tight text-neutral-800">
                     #{orderId}
                   </p>
                 </div>
               </section>
 
-              <section
-                className="p-8 md:p-12 space-y-8"
-                style={{ backgroundColor: tokens.surfaceLow }}
-              >
-                <h3
-                  className="text-xl pb-4"
-                  style={{
-                    fontFamily: "'Cormorant Garamond', serif",
-                    borderBottom: `1px solid ${tokens.outlineVariant}`,
-                  }}
-                >
-                  Order Summary
-                </h3>
-
-                <div className="flex gap-6 items-center">
-                  <div
-                    className="w-24 h-32 shrink-0 overflow-hidden"
-                    style={{ backgroundColor: tokens.surfaceHigh }}
-                  >
-                    <img
-                      className="w-full h-full object-cover grayscale-20"
-                      alt="Close-up of a high-end luxury wool coat"
-                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2RecxLWsxoaJynjbfvLhuprDTMGsixBfioU4mbbHAwGqbpMf6F_huInjecTUxna_Zu_L7Gi4m-t0JDR9fsydoDl1zu3a-c0YusFQtRSFCdag1T6MBqd8acu7PunJfNXzTc5uK4eBNrw1lh0lgL_9CbR2AZs24nUxgGwKlUYjOEqEof9FSZrlOpzDmxlNMsvGmGAEPWFT42HixJtHAGEYo2R4TR2b-IV0kxjCslE4okGTbl-Ikc7WyUMQtSnfcurwHAc1qshFN3Ho"
-                    />
-                  </div>
-                  <div className="grow space-y-1">
-                    <h4
-                      className="text-lg"
-                      style={{ fontFamily: "'Cormorant Garamond', serif" }}
-                    >
-                      Architectural Wool Overcoat
-                    </h4>
-                    <p
-                      className="text-sm uppercase tracking-tighter"
-                      style={{ color: tokens.outline }}
-                    >
-                      Camel / Large
-                    </p>
-                    <p className="font-semibold mt-2">$1,450.00</p>
-                  </div>
+              {/* Minimalist Order Summary List */}
+              <section className="space-y-4 flex flex-col overflow-hidden grow">
+                <div className="flex justify-between items-baseline border-b pb-2 shrink-0" style={{ borderColor: tokens.outlineVariant }}>
+                  <h3 className="text-[10px] uppercase tracking-[0.2em] font-semibold text-neutral-400">
+                    Your Selection
+                  </h3>
+                  <span className="text-xs font-medium text-neutral-500">
+                    {cartItems.reduce((acc, curr) => acc + (curr.quantity || 1), 0)} Products
+                  </span>
                 </div>
 
-                <div
-                  className="space-y-4 pt-4"
-                  style={{ borderTop: `1px solid ${tokens.outlineVariant}` }}
-                >
-                  <div
-                    className="flex justify-between text-sm uppercase tracking-widest"
-                    style={{ color: tokens.secondary }}
-                  >
-                    <span>Subtotal</span>
-                    <span>$1,450.00</span>
+                {/* Self-contained scroll section for product listing */}
+                <div className="divide-y divide-neutral-100 overflow-y-auto max-h-[180px] pr-2 scrollbar-thin">
+                  {cartItems.map((item) => {
+                    const productId = item.product?._id || item.product;
+                    const safeVariantId = typeof item.variant === "object" ? item.variant?._id : item.variant;
+                    const variantDetail = getVariantDetails(item.product, safeVariantId);
+                    const imageUrl = getDisplayImage(item.product, variantDetail);
+                    const displayPrice = item.price ?? variantDetail?.price ?? item.product?.price;
+
+                    return (
+                      <div key={item._id || productId} className="flex gap-4 py-3 first:pt-0 last:pb-0 group">
+                        <div className="w-14 h-20 shrink-0 bg-neutral-100 overflow-hidden relative">
+                          {imageUrl ? (
+                            <img
+                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                              alt={item.product?.title || "Product"}
+                              src={imageUrl}
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center bg-neutral-200" />
+                          )}
+                        </div>
+                        <div className="grow flex flex-col justify-between py-0.5">
+                          <div className="space-y-0.5">
+                            <div className="flex justify-between items-start gap-4">
+                              <h4 className="text-sm font-medium text-neutral-900">
+                                {item.product?.title || "Product Asset"}
+                              </h4>
+                              <span className="font-medium text-neutral-900 text-xs">
+                                {displayPrice?.amount ? formatCurrency(displayPrice.amount, displayPrice.currency) : "—"}
+                              </span>
+                            </div>
+                            <p className="text-[11px] text-neutral-500 font-light">
+                              Variant: <span className="font-medium text-neutral-700">
+                                {variantDetail?.attributes ? Object.values(variantDetail.attributes).join(" / ") : "Default"}
+                              </span>
+                            </p>
+                          </div>
+                          <div className="flex justify-between items-center text-[11px] text-neutral-400">
+                            <span>Quantity: <span className="font-medium text-neutral-700">{item.quantity ?? 1}</span></span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Pricing Table breakdown */}
+                <div className="pt-3 border-t space-y-2 shrink-0" style={{ borderColor: tokens.outlineVariant }}>
+                  <div className="flex justify-between text-xs text-neutral-600">
+                    <span className="font-light">Subtotal</span>
+                    <span className="font-medium text-neutral-900">{formatCurrency(totalPrice)}</span>
                   </div>
-                  <div
-                    className="flex justify-between text-sm uppercase tracking-widest"
-                    style={{ color: tokens.secondary }}
-                  >
-                    <span>Shipping</span>
-                    <span>Complimentary</span>
+                  <div className="flex justify-between text-xs text-neutral-600">
+                    <span className="font-light">Shipping</span>
+                    <span className="text-[10px] uppercase tracking-wider font-medium text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">
+                      {totalPrice >= 15000 ? "Complimentary" : "Standard Flat Rate"}
+                    </span>
                   </div>
-                  <div
-                    className="flex justify-between text-lg pt-2"
-                    style={{ fontFamily: "'Cormorant Garamond', serif" }}
-                  >
-                    <span>Total</span>
-                    <span style={{ color: tokens.primaryDark }}>$1,450.00</span>
+                  <div className="flex justify-between text-xs text-neutral-600">
+                    <span className="font-light">Duties & Taxes</span>
+                    <span className="text-[10px] text-neutral-400">Included</span>
+                  </div>
+                  <div className="flex justify-between text-sm pt-2 border-t border-neutral-200/40">
+                    <span className="font-medium text-neutral-900">Total Amount</span>
+                    <span className="text-base font-semibold text-neutral-950">{formatCurrency(totalPrice)}</span>
                   </div>
                 </div>
               </section>
             </div>
 
-            {/* Right Column: Delivery Details & Actions */}
-            <div className="lg:col-span-5 lg:sticky lg:top-40 space-y-12 mt-12 lg:mt-0">
-              <div className="space-y-10">
-                <div className="space-y-4">
-                  <h3
-                    className="text-xl italic"
-                    style={{ fontFamily: "'Cormorant Garamond', serif" }}
-                  >
+            {/* Right Column: Premium Side Panel Details */}
+            <div 
+              className="lg:col-span-5 space-y-6 bg-white p-6 md:p-8 border rounded-none shadow-sm max-h-full overflow-y-auto" 
+              style={{ borderColor: tokens.outlineVariant }}
+            >
+              <div className="space-y-6 divide-y divide-neutral-100">
+                
+                {/* Delivery Estimate */}
+                <div className="space-y-2 pb-4">
+                  <h3 className="text-[10px] uppercase tracking-[0.2em] font-semibold text-neutral-400">
                     Arrival Estimate
                   </h3>
-                  <p
-                    className="leading-relaxed"
-                    style={{ color: tokens.onSurfaceVariant }}
-                  >
-                    Your curated selection is being prepared for transit. Expect
-                    arrival between{" "}
-                    <span
-                      className="font-semibold"
-                      style={{ color: tokens.onSurface }}
-                    >
-                      October 24th — 26th
-                    </span>
-                    .
+                  <p className="text-xs text-neutral-600 leading-relaxed font-light">
+                    Your curated selection is safely packed and ready for transit. Expect premium white-glove arrival between:
+                  </p>
+                  <p className="text-sm font-medium text-neutral-900 mt-1">
+                    October 24th — October 26th
                   </p>
                 </div>
 
-                <div className="space-y-4">
-                  <h3
-                    className="text-xl italic"
-                    style={{ fontFamily: "'Cormorant Garamond', serif" }}
-                  >
-                    Shipping Address
+                {/* Shipping Destination */}
+                <div className="space-y-2 pt-4">
+                  <h3 className="text-[10px] uppercase tracking-[0.2em] font-semibold text-neutral-400">
+                    Shipping Destination
                   </h3>
-                  <p
-                    className="leading-relaxed uppercase tracking-tighter text-sm"
-                    style={{ color: tokens.onSurfaceVariant }}
-                  >
-                    Julianne V. Sterling
-                    <br />
-                    742 Avenue Montaigne, Apt 4B
-                    <br />
-                    Paris, France 75008
-                  </p>
-                </div>
-
-                <div className="flex flex-col gap-4 pt-8">
-                  {/* Primary CTA */}
-                  <Link
-                    to="/orders"
-                    className="py-5 px-8 text-center text-xs uppercase tracking-[0.2em] transition-all duration-300"
-                    style={{
-                      backgroundColor: tokens.primaryDark,
-                      color: "#ffffff",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.opacity = "0.9";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.opacity = "1";
-                    }}
-                  >
-                    View Order Status
-                  </Link>
-
-                  {/* Secondary CTA */}
-                  <Link
-                    to="/"
-                    className="py-5 px-8 text-center text-xs uppercase tracking-[0.2em] transition-all duration-300"
-                    style={{
-                      backgroundColor: "transparent",
-                      border: `1px solid ${tokens.outline}`,
-                      color: tokens.onSurface,
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = tokens.surfaceLow;
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = "transparent";
-                    }}
-                  >
-                    Continue Shopping
-                  </Link>
+                  <div className="text-xs text-neutral-800 leading-relaxed space-y-0.5 font-light">
+                    <p className="font-medium text-neutral-900">Julianne V. Sterling</p>
+                    <p>742 Avenue Montaigne, Apt 4B</p>
+                    <p className="tracking-wide">Paris, France 75008</p>
+                  </div>
                 </div>
               </div>
 
-              <div
-                className="pt-12"
-                style={{ borderTop: `1px solid ${tokens.outlineVariant}40` }}
-              >
-                <p
-                  className="text-[10px] uppercase tracking-widest leading-loose"
-                  style={{ color: tokens.outline }}
+              {/* Seamless Action CTAs */}
+              <div className="flex flex-col gap-2 pt-2">
+                <Link
+                  to="/orders"
+                  className="py-3 px-6 text-center text-[11px] uppercase tracking-[0.2em] font-medium transition-all duration-300 shadow-sm"
+                  style={{
+                    backgroundColor: tokens.primaryDark,
+                    color: tokens.surfaceLowest,
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#2a2a2a"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = tokens.primaryDark; }}
                 >
-                  A confirmation email has been dispatched. For bespoke
-                  alterations or inquiries, please contact our private
-                  concierge.
+                  Track Order Status
+                </Link>
+
+                <Link
+                  to="/"
+                  className="py-3 px-6 text-center text-[11px] uppercase tracking-[0.2em] font-medium transition-all duration-300 border"
+                  style={{
+                    backgroundColor: "transparent",
+                    borderColor: tokens.outlineVariant,
+                    color: tokens.onSurface,
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = tokens.surfaceLow; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; }}
+                >
+                  Continue Browsing
+                </Link>
+              </div>
+
+              {/* Private Footer Disclaimer */}
+              <div className="pt-4 border-t" style={{ borderColor: tokens.outlineVariant }}>
+                <p className="text-[10px] text-neutral-400 tracking-wide leading-relaxed font-light">
+                  A digital confirmation invoice has been sent to your registered account email. For tailored custom modifications or scheduling inquiries, please notify our private concierge desk.
                 </p>
               </div>
             </div>
+
           </div>
         </main>
       </div>

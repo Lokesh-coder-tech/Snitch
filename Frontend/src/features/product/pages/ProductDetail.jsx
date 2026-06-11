@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useParams, Link, useNavigate } from "react-router";
 import { useProduct } from "../hooks/useProduct";
 import { useCart } from "../../cart/hooks/useCart";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 const ProductDetail = () => {
   const { productId } = useParams();
@@ -18,6 +18,7 @@ const ProductDetail = () => {
       style: {
         backgroundColor: "#1e293b" /* Slate 800 */,
         color: "#f8fafc" /* Slate 50 */,
+        zIndex: 9999,
       },
     });
 
@@ -76,23 +77,23 @@ const ProductDetail = () => {
   }, [activeVariant]);
 
   const handleAttributeChange = (attrName, value) => {
-  const updatedAttributes = {
-    ...selectedAttributes,
-    [attrName]: value,
+    const updatedAttributes = {
+      ...selectedAttributes,
+      [attrName]: value,
+    };
+
+    const matchingVariant = product.variants.find((variant) => {
+      const attrs = variant.attributes || {};
+
+      return Object.entries(updatedAttributes).every(
+        ([key, val]) => attrs[key] === val,
+      );
+    });
+
+    if (matchingVariant) {
+      setSelectedAttributes(matchingVariant.attributes);
+    }
   };
-
-  const matchingVariant = product.variants.find((variant) => {
-    const attrs = variant.attributes || {};
-
-    return Object.entries(updatedAttributes).every(
-      ([key, val]) => attrs[key] === val
-    );
-  });
-
-  if (matchingVariant) {
-    setSelectedAttributes(matchingVariant.attributes);
-  }
-};
 
   if (!product) {
     return (
@@ -393,9 +394,8 @@ const ProductDetail = () => {
                 >
                   Add to Cart
                 </button>
-                <ToastContainer />
 
-                <button
+                {/* <button
                   className="w-full py-4 text-[11px] uppercase tracking-[0.25em] font-medium transition-all duration-300 border"
                   style={{
                     backgroundColor: "transparent",
@@ -411,7 +411,8 @@ const ProductDetail = () => {
                   }}
                 >
                   Buy Now
-                </button>
+                </button> */}
+                
               </div>
 
               {/* Extra elegant details */}

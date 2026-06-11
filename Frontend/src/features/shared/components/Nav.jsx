@@ -106,7 +106,7 @@ const Nav = () => {
               style={{ fontFamily: "'Cormorant Garamond', serif" }}
             >
               <span className="text-xl sm:text-2xl font-medium tracking-[0.3em] uppercase text-[#1b1c1a] group-hover:opacity-70 transition-opacity duration-500">
-                Snitch<span className="text-[#C9A96E]">.</span>
+                Velora<span className="text-[#C9A96E]">.</span>
               </span>
             </Link>
           </div>
@@ -241,7 +241,7 @@ const Nav = () => {
                 value={search}
                 onChange={handleSearchChange}
                 onKeyDown={handleKeyDown}
-                className="w-full bg-transparent text-xs tracking-wider uppercase outline-none text-[#1b1c1a]"
+                className="w-full bg-transparent text-xs tracking-wider normal-case outline-none text-[#1b1c1a]"
               />
             </div>
 
